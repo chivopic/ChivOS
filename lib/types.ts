@@ -4,7 +4,6 @@ export type AppDef = {
   id: AppId;
   title: string;
   label: string;
-  icon: string;
   defaultSize: { width: number; height: number };
 };
 

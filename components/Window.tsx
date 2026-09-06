@@ -107,8 +107,10 @@ export function WindowFrame({
       tabIndex={-1}
       onMouseDown={() => onFocus(id)}
       onKeyDown={onKeyDown}
-      className={`absolute flex flex-col overflow-hidden rounded-xl border bg-desk-panel shadow-window outline-none ${
-        focused ? "border-desk-accent/50" : "border-desk-border"
+      className={`absolute flex flex-col overflow-hidden rounded-2xl border bg-desk-panel/95 shadow-window outline-none backdrop-blur-md transition-[border-color,box-shadow] duration-150 ${
+        focused
+          ? "border-desk-accent/45 ring-1 ring-desk-accent/20"
+          : "border-desk-border/90"
       }`}
       style={{
         left: pos.x,
@@ -119,7 +121,7 @@ export function WindowFrame({
       }}
     >
       <div
-        className="flex h-10 shrink-0 cursor-grab items-center gap-2 border-b border-desk-border bg-desk-raised/80 px-3 active:cursor-grabbing"
+        className="flex h-9 shrink-0 cursor-grab items-center gap-2 border-b border-desk-border/80 bg-desk-raised/70 px-3 backdrop-blur-sm active:cursor-grabbing"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -131,17 +133,28 @@ export function WindowFrame({
             data-window-action
             aria-label={`Close ${title}`}
             onClick={() => onClose(id)}
-            className="h-3 w-3 rounded-full bg-[#e86a5c] hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-desk-accent"
+            className="group relative flex h-3 w-3 items-center justify-center rounded-full bg-[#e86a5c] shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.25)] hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-desk-accent"
+          >
+            <span className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100">
+              <span className="block h-[1.5px] w-1.5 rotate-45 rounded-full bg-black/55" />
+              <span className="absolute block h-[1.5px] w-1.5 -rotate-45 rounded-full bg-black/55" />
+            </span>
+          </button>
+          <span
+            className="h-3 w-3 rounded-full bg-[#e6b04a]/70 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.2)]"
+            aria-hidden
           />
-          <span className="h-3 w-3 rounded-full bg-desk-border" aria-hidden />
-          <span className="h-3 w-3 rounded-full bg-desk-border" aria-hidden />
+          <span
+            className="h-3 w-3 rounded-full bg-[#5fcf7a]/65 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.2)]"
+            aria-hidden
+          />
         </div>
-        <h2 className="flex-1 truncate text-center text-xs font-medium text-desk-text">
+        <h2 className="flex-1 truncate text-center text-[11px] font-medium tracking-wide text-desk-text/90">
           {title}
         </h2>
         <span className="w-10" aria-hidden />
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto p-4 text-sm text-desk-text">
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 text-sm leading-relaxed text-desk-text">
         {children}
       </div>
     </section>

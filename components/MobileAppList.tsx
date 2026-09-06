@@ -2,6 +2,7 @@
 
 import { APPS } from "@/lib/apps";
 import type { AppId } from "@/lib/types";
+import { AppIcon } from "./icons/AppIcon";
 import { AboutWindow } from "./windows/AboutWindow";
 import { ProjectsWindow } from "./windows/ProjectsWindow";
 import { NotesWindow } from "./windows/NotesWindow";
@@ -34,17 +35,20 @@ export function MobileAppList({ active, onOpen, onClose }: MobileAppListProps) {
     const app = APPS.find((a) => a.id === active);
     return (
       <div className="flex h-full flex-col md:hidden">
-        <div className="flex items-center gap-2 border-b border-desk-border px-3 py-3">
+        <div className="flex items-center gap-2 border-b border-desk-border/80 bg-desk-panel/40 px-3 py-3 backdrop-blur-md">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg px-2 py-1 text-sm text-desk-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-desk-accent"
+            className="rounded-lg px-2 py-1 text-sm text-desk-accent transition hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-desk-accent"
           >
             ← Back
           </button>
-          <h2 className="flex-1 text-sm font-medium text-desk-text">{app?.title}</h2>
+          <div className="flex flex-1 items-center gap-2">
+            {app ? <AppIcon id={app.id} size="sm" /> : null}
+            <h2 className="text-sm font-medium text-desk-text">{app?.title}</h2>
+          </div>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto p-4">
+        <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-5">
           <Panel id={active} />
         </div>
       </div>
@@ -53,25 +57,24 @@ export function MobileAppList({ active, onOpen, onClose }: MobileAppListProps) {
 
   return (
     <div className="flex h-full flex-col px-4 pb-8 pt-14 md:hidden">
-      <p className="mb-1 font-mono text-xs text-desk-warm">
+      <p className="mb-1 font-mono text-[11px] tracking-wide text-desk-warm/90">
         build things · explore deeply · stay curious
       </p>
-      <h1 className="mb-6 text-2xl font-semibold text-desk-text">ChivOS</h1>
-      <ul className="space-y-2" aria-label="Apps">
+      <h1 className="mb-7 text-2xl font-semibold tracking-tight text-desk-text">
+        ChivOS
+      </h1>
+      <ul className="space-y-2.5" aria-label="Apps">
         {APPS.map((app) => (
           <li key={app.id}>
             <button
               type="button"
               onClick={() => onOpen(app.id)}
-              className="flex w-full items-center gap-3 rounded-xl border border-desk-border bg-desk-panel px-3 py-3 text-left transition hover:border-desk-accent/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-desk-accent"
+              className="flex w-full items-center gap-3.5 rounded-2xl border border-desk-border/80 bg-desk-panel/80 px-3.5 py-3.5 text-left shadow-sm transition hover:border-desk-accent/35 hover:bg-desk-raised/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-desk-accent"
             >
-              <span
-                className="flex h-10 w-10 items-center justify-center rounded-lg bg-desk-bg text-lg text-desk-accent"
-                aria-hidden
-              >
-                {app.icon}
+              <AppIcon id={app.id} size="md" />
+              <span className="font-medium tracking-wide text-desk-text">
+                {app.title}
               </span>
-              <span className="font-medium text-desk-text">{app.title}</span>
             </button>
           </li>
         ))}

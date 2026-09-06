@@ -104,14 +104,32 @@ export function Desktop() {
 
   return (
     <div className="relative h-[100dvh] w-full overflow-hidden bg-desk-bg">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-40"
-        style={{
-          backgroundImage:
-            "radial-gradient(ellipse at 20% 10%, rgba(110,168,255,0.12), transparent 50%), radial-gradient(ellipse at 80% 90%, rgba(201,162,39,0.08), transparent 45%)",
-        }}
-        aria-hidden
-      />
+      {/* Wallpaper — restrained mesh + soft noise */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden>
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: [
+              "radial-gradient(ellipse 70% 55% at 18% 8%, rgba(110,168,255,0.16), transparent 58%)",
+              "radial-gradient(ellipse 55% 45% at 82% 88%, rgba(201,162,39,0.10), transparent 52%)",
+              "radial-gradient(ellipse 40% 35% at 70% 20%, rgba(183,148,246,0.07), transparent 55%)",
+              "radial-gradient(ellipse 50% 40% at 30% 75%, rgba(94,200,191,0.06), transparent 50%)",
+              "linear-gradient(180deg, #0c0e12 0%, #0a0c10 100%)",
+            ].join(", "),
+          }}
+        />
+        <div className="desk-noise absolute inset-0 opacity-[0.35]" />
+        <div
+          className="absolute inset-0 opacity-[0.18]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+            maskImage:
+              "radial-gradient(ellipse 75% 70% at 50% 45%, black 20%, transparent 75%)",
+          }}
+        />
+      </div>
 
       <StatusBar />
 
@@ -126,9 +144,11 @@ export function Desktop() {
       <div className="relative hidden h-full md:block">
         <DesktopIcons onOpen={openApp} />
 
-        <p className="pointer-events-none absolute bottom-24 left-1/2 -translate-x-1/2 text-center font-mono text-xs text-desk-muted/80">
-          build things · explore deeply · stay curious
-        </p>
+        <div className="pointer-events-none absolute bottom-24 left-1/2 z-[1] -translate-x-1/2 text-center">
+          <p className="font-mono text-[11px] tracking-[0.18em] text-desk-muted/70">
+            build things · explore deeply · stay curious
+          </p>
+        </div>
 
         {windows
           .filter((w) => !w.minimized)
@@ -158,7 +178,6 @@ export function Desktop() {
         <Dock openIds={openIds} focusedId={focusedId} onOpen={openApp} />
       </div>
 
-      {/* Screen-reader hint */}
       <p className="sr-only">
         ChivOS desktop. Use dock or icons to open About, Projects, Notes, Now, and
         Contact. Press Escape to close a focused window. Apps available:{" "}

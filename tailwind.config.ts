@@ -22,12 +22,24 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["ui-sans-serif", "system-ui", "sans-serif"],
-        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+        sans: [
+          "var(--font-sans)",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
+        mono: [
+          "var(--font-mono)",
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "monospace",
+        ],
       },
       boxShadow: {
-        window: "0 12px 40px rgba(0,0,0,0.45), 0 0 0 1px rgba(42,51,68,0.8)",
-        dock: "0 8px 32px rgba(0,0,0,0.5)",
+        window:
+          "0 18px 48px rgba(0,0,0,0.55), 0 0 0 1px rgba(42,51,68,0.55)",
+        dock: "0 12px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06)",
       },
     },
   },

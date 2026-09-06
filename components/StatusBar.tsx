@@ -60,13 +60,6 @@ export function StatusBar() {
         <span className="text-[13px] font-semibold tracking-wide text-desk-text">
           ChivOS
         </span>
-        <span
-          className="hidden h-3 w-px bg-desk-border sm:block"
-          aria-hidden
-        />
-        <span className="hidden font-mono text-[10px] uppercase tracking-[0.14em] text-desk-muted sm:inline">
-          v1
-        </span>
       </div>
       <div className="pointer-events-auto flex items-center gap-2.5">
         <button

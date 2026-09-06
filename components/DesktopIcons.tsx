@@ -26,7 +26,7 @@ export function DesktopIcons({ onOpen }: DesktopIconsProps) {
               }
             }}
             onClick={() => onOpen(app.id)}
-            className="group flex w-[4.75rem] flex-col items-center gap-1.5 rounded-xl p-2 text-center transition hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-desk-accent"
+            className="group flex w-[4.75rem] flex-col items-center gap-1.5 rounded-xl p-2 text-center transition hover:bg-desk-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-desk-accent"
             aria-label={`Open ${app.title}`}
           >
             <AppIcon
@@ -34,7 +34,10 @@ export function DesktopIcons({ onOpen }: DesktopIconsProps) {
               size="lg"
               className="transition duration-150 group-hover:scale-[1.03] group-active:scale-[0.98]"
             />
-            <span className="text-[11px] font-medium tracking-wide text-desk-text/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.65)]">
+            <span
+              className="text-[11px] font-medium tracking-wide text-desk-text/90"
+              style={{ textShadow: "var(--desk-label-shadow)" }}
+            >
               {app.label}
             </span>
           </button>

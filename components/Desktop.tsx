@@ -104,31 +104,11 @@ export function Desktop() {
 
   return (
     <div className="relative h-[100dvh] w-full overflow-hidden bg-desk-bg">
-      {/* Wallpaper — restrained mesh + soft noise */}
+      {/* Wallpaper — theme-aware mesh + soft noise */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: [
-              "radial-gradient(ellipse 70% 55% at 18% 8%, rgba(110,168,255,0.16), transparent 58%)",
-              "radial-gradient(ellipse 55% 45% at 82% 88%, rgba(201,162,39,0.10), transparent 52%)",
-              "radial-gradient(ellipse 40% 35% at 70% 20%, rgba(183,148,246,0.07), transparent 55%)",
-              "radial-gradient(ellipse 50% 40% at 30% 75%, rgba(94,200,191,0.06), transparent 50%)",
-              "linear-gradient(180deg, #0c0e12 0%, #0a0c10 100%)",
-            ].join(", "),
-          }}
-        />
-        <div className="desk-noise absolute inset-0 opacity-[0.35]" />
-        <div
-          className="absolute inset-0 opacity-[0.18]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-            backgroundSize: "64px 64px",
-            maskImage:
-              "radial-gradient(ellipse 75% 70% at 50% 45%, black 20%, transparent 75%)",
-          }}
-        />
+        <div className="desk-wallpaper absolute inset-0" />
+        <div className="desk-noise absolute inset-0" />
+        <div className="desk-grid absolute inset-0 opacity-[0.18]" />
       </div>
 
       <StatusBar />

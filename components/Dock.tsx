@@ -14,7 +14,7 @@ export function Dock({ openIds, focusedId, onOpen }: DockProps) {
   return (
     <nav
       aria-label="Dock"
-      className="absolute bottom-5 left-1/2 z-50 flex -translate-x-1/2 items-end gap-1 rounded-[22px] border border-white/[0.08] bg-desk-panel/75 px-2.5 py-2 shadow-dock backdrop-blur-xl"
+      className="absolute bottom-5 left-1/2 z-50 flex -translate-x-1/2 items-end gap-1 rounded-[22px] border border-desk-glassBorder bg-desk-panel/75 px-2.5 py-2 shadow-dock backdrop-blur-xl"
     >
       {APPS.map((app) => {
         const isOpen = openIds.includes(app.id);
@@ -29,8 +29,8 @@ export function Dock({ openIds, focusedId, onOpen }: DockProps) {
             aria-pressed={isFocused}
             className={`group relative flex h-14 w-14 flex-col items-center justify-center rounded-2xl transition duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-desk-accent ${
               isFocused
-                ? "bg-white/[0.08]"
-                : "hover:bg-white/[0.05] hover:-translate-y-0.5"
+                ? "bg-desk-hoverStrong"
+                : "hover:bg-desk-hover hover:-translate-y-0.5"
             }`}
           >
             <AppIcon

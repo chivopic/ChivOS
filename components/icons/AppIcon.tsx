@@ -65,16 +65,20 @@ export function ContactGlyph({ className, strokeWidth }: IconProps) {
   );
 }
 
-/** Flat, high-contrast tile colors (readable on dark + light desks) */
+/**
+ * Dual-theme accents (scheme 3):
+ * - dark: saturated tile + light glyph (unchanged spirit)
+ * - light: pale tile + charcoal glyph + tiny per-app accent (via CSS vars)
+ */
 export const APP_ACCENTS: Record<
   AppId,
-  { tile: string; color: string }
+  { tile: string; color: string; accent: string }
 > = {
-  about: { tile: "#23406e", color: "#9ec2ff" },
-  projects: { tile: "#1b4a46", color: "#7ee0d6" },
-  notes: { tile: "#4a3c16", color: "#efc85a" },
-  now: { tile: "#3d2a52", color: "#cbb0ff" },
-  contact: { tile: "#1f3d5c", color: "#8fc2ff" },
+  about: { tile: "#23406e", color: "#9ec2ff", accent: "#3d7eef" },
+  projects: { tile: "#1b4a46", color: "#7ee0d6", accent: "#0d9488" },
+  notes: { tile: "#4a3c16", color: "#efc85a", accent: "#b8860b" },
+  now: { tile: "#3d2a52", color: "#cbb0ff", accent: "#7c5cd6" },
+  contact: { tile: "#1f3d5c", color: "#8fc2ff", accent: "#2563eb" },
 };
 
 const GLYPHS: Record<AppId, (p: IconProps) => ReactElement> = {
@@ -104,17 +108,17 @@ export function AppIcon({ id, size = "md", className = "" }: AppIconProps) {
 
   return (
     <span
-      className={`relative inline-flex shrink-0 items-center justify-center ring-1 ${dims.box} ${className}`}
+      className={`app-icon-tile relative inline-flex shrink-0 items-center justify-center ring-1 ${dims.box} ${className}`}
       style={{
-        background: accent.tile,
-        color: accent.color,
-        boxShadow: "var(--desk-icon-inset)",
-        // ring color via style for theme adapt
+        ["--icon-dark-tile" as string]: accent.tile,
+        ["--icon-dark-glyph" as string]: accent.color,
+        ["--icon-light-accent" as string]: accent.accent,
         ["--tw-ring-color" as string]: "var(--desk-icon-ring)",
       }}
       aria-hidden
     >
-      <Glyph className={`relative ${dims.glyph}`} strokeWidth={2.15} />
+      <span className="app-icon-accent" />
+      <Glyph className={`relative z-[1] ${dims.glyph}`} strokeWidth={2.15} />
     </span>
   );
 }

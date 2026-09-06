@@ -43,6 +43,8 @@ export function WindowFrame({
   const dragging = useRef(false);
   const origin = useRef({ px: 0, py: 0, wx: 0, wy: 0 });
   const [pos, setPos] = useState({ x, y });
+  const posRef = useRef(pos);
+  posRef.current = pos;
 
   useEffect(() => {
     setPos({ x, y });
@@ -53,25 +55,28 @@ export function WindowFrame({
       if ((e.target as HTMLElement).closest("[data-window-action]")) return;
       onFocus(id);
       dragging.current = true;
-      origin.current = { px: e.clientX, py: e.clientY, wx: pos.x, wy: pos.y };
+      origin.current = {
+        px: e.clientX,
+        py: e.clientY,
+        wx: posRef.current.x,
+        wy: posRef.current.y,
+      };
       e.currentTarget.setPointerCapture(e.pointerId);
     },
-    [id, onFocus, pos.x, pos.y],
+    [id, onFocus],
   );
 
-  const onPointerMove = useCallback(
-    (e: ReactPointerEvent<HTMLDivElement>) => {
-      if (!dragging.current) return;
-      const dx = e.clientX - origin.current.px;
-      const dy = e.clientY - origin.current.py;
-      const next = {
-        x: Math.max(0, origin.current.wx + dx),
-        y: Math.max(40, origin.current.wy + dy),
-      };
-      setPos(next);
-    },
-    [],
-  );
+  const onPointerMove = useCallback((e: ReactPointerEvent<HTMLDivElement>) => {
+    if (!dragging.current) return;
+    const dx = e.clientX - origin.current.px;
+    const dy = e.clientY - origin.current.py;
+    const next = {
+      x: Math.max(0, origin.current.wx + dx),
+      y: Math.max(40, origin.current.wy + dy),
+    };
+    posRef.current = next;
+    setPos(next);
+  }, []);
 
   const onPointerUp = useCallback(
     (e: ReactPointerEvent<HTMLDivElement>) => {
@@ -82,9 +87,9 @@ export function WindowFrame({
       } catch {
         /* ignore */
       }
-      onMove(id, pos.x, pos.y);
+      onMove(id, posRef.current.x, posRef.current.y);
     },
-    [id, onMove, pos.x, pos.y],
+    [id, onMove],
   );
 
   const onKeyDown = (e: KeyboardEvent<HTMLElement>) => {

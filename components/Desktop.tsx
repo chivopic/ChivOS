@@ -8,6 +8,7 @@ import { Dock } from "./Dock";
 import { DesktopIcons } from "./DesktopIcons";
 import { WindowFrame } from "./Window";
 import { MobileAppList } from "./MobileAppList";
+import { ParticleField } from "./ParticleField";
 import { AboutWindow } from "./windows/AboutWindow";
 import { ProjectsWindow } from "./windows/ProjectsWindow";
 import { NotesWindow } from "./windows/NotesWindow";
@@ -110,6 +111,9 @@ export function Desktop() {
         <div className="desk-noise absolute inset-0" />
         <div className="desk-grid absolute inset-0" />
       </div>
+
+      {/* Dark-theme particle dust band (omp-like) — above wallpaper, under UI */}
+      <ParticleField />
 
       <StatusBar />
 

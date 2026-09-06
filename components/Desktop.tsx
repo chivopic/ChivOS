@@ -8,7 +8,7 @@ import { Dock } from "./Dock";
 import { DesktopIcons } from "./DesktopIcons";
 import { WindowFrame } from "./Window";
 import { MobileAppList } from "./MobileAppList";
-import { ParticleField } from "./ParticleField";
+import { GalaxyField } from "./GalaxyField";
 import { AboutWindow } from "./windows/AboutWindow";
 import { ProjectsWindow } from "./windows/ProjectsWindow";
 import { NotesWindow } from "./windows/NotesWindow";
@@ -105,7 +105,7 @@ export function Desktop() {
 
   return (
     <div className="relative h-[100dvh] w-full overflow-hidden bg-desk-bg">
-      {/* Wallpaper — near-black starfield (dark) / Background A+ (light); particles are hero */}
+      {/* Wallpaper — near-black (dark) / Background A+ (light); Galaxy WebGL is dark hero */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <div className="desk-wallpaper absolute inset-0" />
         <div className="desk-starfield absolute inset-0" />
@@ -113,8 +113,8 @@ export function Desktop() {
         <div className="desk-grid absolute inset-0" />
       </div>
 
-      {/* Dark-theme particle dust band (omp-like) — above wallpaper, under UI */}
-      <ParticleField />
+      {/* Dark-theme Galaxy shader starfield — above wallpaper, under UI */}
+      <GalaxyField />
 
       <StatusBar />
 

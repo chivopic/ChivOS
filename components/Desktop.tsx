@@ -104,11 +104,11 @@ export function Desktop() {
 
   return (
     <div className="relative h-[100dvh] w-full overflow-hidden bg-desk-bg">
-      {/* Wallpaper — theme-aware mesh + soft noise */}
+      {/* Wallpaper — soft grid + faint noise + cool corner glows (theme CSS) */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <div className="desk-wallpaper absolute inset-0" />
         <div className="desk-noise absolute inset-0" />
-        <div className="desk-grid absolute inset-0 opacity-[0.18]" />
+        <div className="desk-grid absolute inset-0" />
       </div>
 
       <StatusBar />

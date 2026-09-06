@@ -54,7 +54,7 @@ export function StatusBar() {
   }, []);
 
   return (
-    <header className="pointer-events-none absolute inset-x-0 top-0 z-50 flex h-11 items-center justify-between border-b border-desk-statusBorder bg-desk-bg/40 px-4 text-sm text-desk-muted backdrop-blur-md">
+    <header className="desk-status-glass pointer-events-none absolute inset-x-0 top-0 z-50 flex h-11 items-center justify-between border-b border-desk-statusBorder px-4 text-sm text-desk-muted backdrop-blur-md">
       <div className="pointer-events-auto flex items-center gap-2.5">
         <BrandMark className="h-[15px] w-[15px]" />
         <span className="text-[13px] font-semibold tracking-wide text-desk-text">

@@ -14,7 +14,7 @@ export function Dock({ openIds, focusedId, onOpen }: DockProps) {
   return (
     <nav
       aria-label="Dock"
-      className="absolute bottom-5 left-1/2 z-50 flex -translate-x-1/2 items-end gap-1 rounded-[22px] border border-desk-glassBorder bg-desk-panel/75 px-2.5 py-2 shadow-dock backdrop-blur-xl"
+      className="desk-dock-glass absolute bottom-5 left-1/2 z-50 flex -translate-x-1/2 items-end gap-1 rounded-[22px] border border-desk-glassBorder px-2.5 py-2 shadow-dock backdrop-blur-xl"
     >
       {APPS.map((app) => {
         const isOpen = openIds.includes(app.id);

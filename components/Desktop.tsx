@@ -105,9 +105,10 @@ export function Desktop() {
 
   return (
     <div className="relative h-[100dvh] w-full overflow-hidden bg-desk-bg">
-      {/* Wallpaper — Background A+ grid / noise / cool corners + soft depth (theme CSS) */}
+      {/* Wallpaper — near-black starfield (dark) / Background A+ (light); particles are hero */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <div className="desk-wallpaper absolute inset-0" />
+        <div className="desk-starfield absolute inset-0" />
         <div className="desk-noise absolute inset-0" />
         <div className="desk-grid absolute inset-0" />
       </div>

@@ -5,7 +5,7 @@
 :root,
 html[data-theme="dark"] {
   color-scheme: dark;
-  --desk-bg: #0c0e12;
+  --desk-bg: #050508;
   --desk-panel: #141820;
   --desk-raised: #1a2030;
   --desk-border: #2a3344;
@@ -18,24 +18,25 @@ html[data-theme="dark"] {
   --desk-hover-strong: rgba(255, 255, 255, 0.08);
   --desk-glass-border: rgba(255, 255, 255, 0.08);
   --desk-status-border: rgba(255, 255, 255, 0.04);
-  --desk-grid-line: rgba(255, 255, 255, 0.04);
-  --desk-grid-layer-opacity: 0.24;
+  --desk-grid-line: rgba(255, 255, 255, 0.025);
+  --desk-grid-layer-opacity: 0.14;
   --desk-grid-size: 64px;
   --desk-label-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
-  --desk-noise-opacity: 0.4;
-  /* Quiet craft mesh — slight A+ corner enrichment only */
+  --desk-noise-opacity: 0.28;
+  /* Near-black night sky — subtle cool corners, particles remain the hero */
   --desk-wallpaper:
-    radial-gradient(ellipse 72% 58% at 8% 4%, rgba(110, 168, 255, 0.22), transparent 58%),
-    radial-gradient(ellipse 58% 48% at 94% 96%, rgba(94, 200, 191, 0.13), transparent 52%),
-    radial-gradient(ellipse 40% 35% at 70% 20%, rgba(183, 148, 246, 0.08), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 30% 75%, rgba(201, 162, 39, 0.07), transparent 50%),
-    linear-gradient(180deg, #0c0e12 0%, #0a0c10 100%);
+    radial-gradient(ellipse 70% 55% at 6% 3%, rgba(90, 130, 210, 0.09), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 96% 97%, rgba(70, 150, 160, 0.06), transparent 55%),
+    radial-gradient(ellipse 38% 32% at 72% 18%, rgba(140, 110, 210, 0.045), transparent 58%),
+    radial-gradient(ellipse 48% 38% at 28% 78%, rgba(160, 130, 40, 0.03), transparent 52%),
+    linear-gradient(180deg, #050508 0%, #030306 55%, #06060a 100%);
+  --desk-starfield-opacity: 0.55;
   --desk-shadow-window: 0 18px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(42, 51, 68, 0.55);
   --desk-shadow-dock: 0 12px 40px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   --desk-icon-ring: rgba(255, 255, 255, 0.08);
   --desk-icon-inset: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 2px rgba(0, 0, 0, 0.35);
-  --desk-status-glass: rgba(12, 14, 18, 0.4);
-  --desk-dock-glass: rgba(20, 24, 32, 0.75);
+  --desk-status-glass: rgba(5, 5, 8, 0.45);
+  --desk-dock-glass: rgba(10, 12, 18, 0.78);
   --icon-tile-bg: var(--icon-dark-tile);
   --icon-glyph: var(--icon-dark-glyph);
   --icon-accent-opacity: 0;
@@ -45,6 +46,7 @@ html[data-theme="dark"] {
 
 html[data-theme="light"] {
   color-scheme: light;
+  --desk-starfield-opacity: 0;
   --desk-bg: #f3f5f9;
   --desk-panel: #ffffff;
   --desk-raised: #eef1f6;
@@ -114,6 +116,19 @@ body {
   mix-blend-mode: soft-light;
   opacity: var(--desk-noise-opacity);
 }
+
+.desk-starfield {
+  opacity: var(--desk-starfield-opacity, 0);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280' viewBox='0 0 280 280'%3E%3Ccircle cx='18' cy='22' r='0.7' fill='%23ffffff' opacity='0.55'/%3E%3Ccircle cx='52' cy='78' r='0.55' fill='%23dce6ff' opacity='0.4'/%3E%3Ccircle cx='96' cy='34' r='0.8' fill='%23ffffff' opacity='0.35'/%3E%3Ccircle cx='140' cy='110' r='0.5' fill='%23c8dcff' opacity='0.45'/%3E%3Ccircle cx='188' cy='48' r='0.65' fill='%23ffffff' opacity='0.5'/%3E%3Ccircle cx='220' cy='150' r='0.75' fill='%23e6f0ff' opacity='0.3'/%3E%3Ccircle cx='256' cy='88' r='0.55' fill='%23ffffff' opacity='0.42'/%3E%3Ccircle cx='34' cy='160' r='0.5' fill='%23d2e1ff' opacity='0.38'/%3E%3Ccircle cx='78' cy='210' r='0.7' fill='%23ffffff' opacity='0.28'/%3E%3Ccircle cx='122' cy='188' r='0.45' fill='%23dcebfd' opacity='0.32'/%3E%3Ccircle cx='168' cy='240' r='0.8' fill='%23ffffff' opacity='0.25'/%3E%3Ccircle cx='210' cy='200' r='0.5' fill='%23c8d7ff' opacity='0.36'/%3E%3Ccircle cx='248' cy='246' r='0.6' fill='%23ffffff' opacity='0.3'/%3E%3Ccircle cx='12' cy='250' r='0.45' fill='%23d2dcff' opacity='0.28'/%3E%3Ccircle cx='64' cy='120' r='0.55' fill='%23ffffff' opacity='0.22'/%3E%3Ccircle cx='154' cy='66' r='0.4' fill='%23e6f0ff' opacity='0.34'/%3E%3Ccircle cx='198' cy='18' r='0.5' fill='%23ffffff' opacity='0.26'/%3E%3Ccircle cx='270' cy='180' r='0.55' fill='%23dce6ff' opacity='0.3'/%3E%3Ccircle cx='100' cy='140' r='0.35' fill='%23ffffff' opacity='0.2'/%3E%3Ccircle cx='40' cy='50' r='0.4' fill='%23c8dcff' opacity='0.24'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280' viewBox='0 0 280 280'%3E%3Ccircle cx='18' cy='22' r='0.7' fill='%23ffffff' opacity='0.55'/%3E%3Ccircle cx='52' cy='78' r='0.55' fill='%23dce6ff' opacity='0.4'/%3E%3Ccircle cx='96' cy='34' r='0.8' fill='%23ffffff' opacity='0.35'/%3E%3Ccircle cx='140' cy='110' r='0.5' fill='%23c8dcff' opacity='0.45'/%3E%3Ccircle cx='188' cy='48' r='0.65' fill='%23ffffff' opacity='0.5'/%3E%3Ccircle cx='220' cy='150' r='0.75' fill='%23e6f0ff' opacity='0.3'/%3E%3Ccircle cx='256' cy='88' r='0.55' fill='%23ffffff' opacity='0.42'/%3E%3Ccircle cx='34' cy='160' r='0.5' fill='%23d2e1ff' opacity='0.38'/%3E%3Ccircle cx='78' cy='210' r='0.7' fill='%23ffffff' opacity='0.28'/%3E%3Ccircle cx='122' cy='188' r='0.45' fill='%23dcebfd' opacity='0.32'/%3E%3Ccircle cx='168' cy='240' r='0.8' fill='%23ffffff' opacity='0.25'/%3E%3Ccircle cx='210' cy='200' r='0.5' fill='%23c8d7ff' opacity='0.36'/%3E%3Ccircle cx='248' cy='246' r='0.6' fill='%23ffffff' opacity='0.3'/%3E%3Ccircle cx='12' cy='250' r='0.45' fill='%23d2dcff' opacity='0.28'/%3E%3Ccircle cx='64' cy='120' r='0.55' fill='%23ffffff' opacity='0.22'/%3E%3Ccircle cx='154' cy='66' r='0.4' fill='%23e6f0ff' opacity='0.34'/%3E%3Ccircle cx='198' cy='18' r='0.5' fill='%23ffffff' opacity='0.26'/%3E%3Ccircle cx='270' cy='180' r='0.55' fill='%23dce6ff' opacity='0.3'/%3E%3Ccircle cx='100' cy='140' r='0.35' fill='%23ffffff' opacity='0.2'/%3E%3Ccircle cx='40' cy='50' r='0.4' fill='%23c8dcff' opacity='0.24'/%3E%3C/svg%3E");
+  background-size: 280px 280px, 420px 420px;
+  background-position: 0 0, 140px 90px;
+  background-repeat: repeat;
+  pointer-events: none;
+}
+
+
 
 .desk-grid {
   background-image:

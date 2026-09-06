@@ -6,22 +6,23 @@ import { useTheme } from "./ThemeProvider";
 type RGB = readonly [number, number, number];
 
 type Particle = {
-  /** Position along the band spine [0, 1] (0 = BR origin, 1 = far spray). */
-  t: number;
-  /** Signed offset from spine in band-normal units. */
-  offset: number;
+  /** Normalized viewport X [0, 1]. */
+  x: number;
+  /** Normalized viewport Y [0, 1]. */
+  y: number;
   size: number;
   alpha: number;
-  /** Slow drift along spine. */
-  driftT: number;
-  /** Slow drift across band. */
-  driftO: number;
+  /** Slow drift in normalized space. */
+  driftX: number;
+  driftY: number;
   /** Phase for shimmer. */
   phase: number;
   shimmer: number;
   /** Occasional sparkle: pulse rate + peak boost. */
   sparkle: number;
   sparklePhase: number;
+  /** Palette parameter: 0 near BR (magenta) → 1 far (cyan/white). */
+  colorT: number;
 };
 
 const PALETTE: readonly RGB[] = [
@@ -35,9 +36,9 @@ const PALETTE: readonly RGB[] = [
 ];
 
 const MAX_DPR = 1.75;
-/** ~2.7× prior 2200 — dense showy spray; still OK under DPR cap. */
+/** High-count full-field nebula; still OK under DPR cap. */
 const TARGET_COUNT = 6000;
-/** Denser static dust for reduced-motion (not full animation). */
+/** Dense static full-field dust for reduced-motion (not full animation). */
 const REDUCED_COUNT = 480;
 
 function lerp(a: number, b: number, t: number) {
@@ -61,44 +62,47 @@ function colorAt(t: number): RGB {
   ];
 }
 
-/** Quadratic Bezier spine: bottom-right → mid-right arc → center-left. */
-function spinePoint(t: number, w: number, h: number) {
-  const p0x = w * 1.02;
-  const p0y = h * 0.98;
-  const p1x = w * 0.72;
-  const p1y = h * 0.42;
-  const p2x = w * 0.08;
-  const p2y = h * 0.38;
-  const u = 1 - t;
-  const x = u * u * p0x + 2 * u * t * p1x + t * t * p2x;
-  const y = u * u * p0y + 2 * u * t * p1y + t * t * p2y;
-  const tx = 2 * u * (p1x - p0x) + 2 * t * (p2x - p1x);
-  const ty = 2 * u * (p1y - p0y) + 2 * t * (p2y - p1y);
-  const len = Math.hypot(tx, ty) || 1;
-  return { x, y, nx: -ty / len, ny: tx / len };
+/**
+ * Full-viewport nebula spawn: every region gets particles; soft density
+ * gradient toward bottom-right (not a thin BR arc spine).
+ */
+function sampleNebulaXY(): { x: number; y: number } {
+  const mode = Math.random();
+  if (mode < 0.42) {
+    // Uniform coverage across the whole viewport.
+    return { x: Math.random(), y: Math.random() };
+  }
+  if (mode < 0.72) {
+    // Soft BR bias — still spans most of the field.
+    return {
+      x: 1 - Math.pow(Math.random(), 1.45),
+      y: 1 - Math.pow(Math.random(), 1.35),
+    };
+  }
+  if (mode < 0.9) {
+    // Lower-right quadrant emphasis.
+    return {
+      x: 0.35 + Math.pow(Math.random(), 0.85) * 0.65,
+      y: 0.3 + Math.pow(Math.random(), 0.9) * 0.7,
+    };
+  }
+  // Tight BR nebula core cluster.
+  return {
+    x: 0.62 + Math.pow(Math.random(), 0.75) * 0.38,
+    y: 0.55 + Math.pow(Math.random(), 0.8) * 0.45,
+  };
 }
 
-/** Band half-width — slightly richer spray envelope. */
-function bandHalfWidth(t: number, w: number, h: number) {
-  const base = Math.min(w, h);
-  return base * lerp(0.05, 0.32, Math.pow(t, 0.82));
-}
-
-function denserT(): number {
-  // Heavier bias toward curved dense core; long sparse outer spray.
-  const u = Math.random();
-  if (u < 0.62) return Math.pow(Math.random(), 1.7);
-  if (u < 0.88) return 0.22 + Math.random() * 0.48;
-  return 0.55 + Math.pow(Math.random(), 0.65) * 0.45;
+/** Magenta near BR → cyan/white toward opposite corners. */
+function colorTFromXY(x: number, y: number): number {
+  const distFromBR = Math.hypot(1 - x, 1 - y) / Math.SQRT2;
+  const jitter = (Math.random() - 0.5) * 0.12;
+  return clamp(distFromBR * 0.92 + jitter, 0, 1);
 }
 
 function makeParticle(reduced: boolean): Particle {
-  const t = denserT();
-  const g =
-    (Math.random() + Math.random() + Math.random() + Math.random() - 2) / 2;
-  const spread = Math.pow(t, 0.5) * (0.28 + Math.random() * 0.95);
+  const { x, y } = sampleNebulaXY();
   const isSparkle = !reduced && Math.random() < 0.11;
-  // Wider size range: fine dust → occasional larger glints.
   const size = reduced
     ? 0.55 + Math.random() * 1.5
     : 0.28 +
@@ -106,8 +110,8 @@ function makeParticle(reduced: boolean): Particle {
       (Math.random() < 0.12 ? Math.random() * 2.2 : 0) +
       (isSparkle ? 0.4 + Math.random() * 1.1 : 0);
   return {
-    t,
-    offset: g * spread,
+    x,
+    y,
     size,
     alpha: reduced
       ? 0.2 + Math.random() * 0.4
@@ -115,13 +119,13 @@ function makeParticle(reduced: boolean): Particle {
         Math.random() * 0.62 +
         (Math.random() < 0.18 ? 0.22 : 0) +
         (isSparkle ? 0.15 : 0),
-    // Slightly faster / more dynamic drift — still gentle.
-    driftT: (Math.random() - 0.5) * 0.028,
-    driftO: (Math.random() - 0.5) * 0.055,
+    driftX: (Math.random() - 0.5) * 0.018,
+    driftY: (Math.random() - 0.5) * 0.016,
     phase: Math.random() * Math.PI * 2,
     shimmer: 0.45 + Math.random() * 1.15,
     sparkle: isSparkle ? 2.2 + Math.random() * 3.8 : 0,
     sparklePhase: Math.random() * Math.PI * 2,
+    colorT: colorTFromXY(x, y),
   };
 }
 
@@ -188,51 +192,49 @@ export function ParticleField() {
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i]!;
         if (animate) {
-          p.t += p.driftT * 0.016;
-          p.offset += p.driftO * 0.016;
-          if (p.t < -0.02 || p.t > 1.05) {
+          p.x += p.driftX * 0.016;
+          p.y += p.driftY * 0.016;
+          // Soft wrap / respawn so the nebula stays full-field (no band collapse).
+          if (p.x < -0.04 || p.x > 1.04 || p.y < -0.04 || p.y > 1.04) {
             const np = makeParticle(false);
-            p.t = np.t;
-            p.offset = np.offset;
+            p.x = np.x;
+            p.y = np.y;
             p.size = np.size;
             p.alpha = np.alpha;
-            p.driftT = np.driftT;
-            p.driftO = np.driftO;
+            p.driftX = np.driftX;
+            p.driftY = np.driftY;
             p.phase = np.phase;
             p.shimmer = np.shimmer;
             p.sparkle = np.sparkle;
             p.sparklePhase = np.sparklePhase;
+            p.colorT = np.colorT;
           }
-          // Soft pull toward band so spray stays coherent.
-          p.offset *= 0.999;
         }
 
-        const tt = clamp(p.t, 0, 1);
-        const { x, y, nx, ny } = spinePoint(tt, w, h);
-        const half = bandHalfWidth(tt, w, h);
-        const px = x + nx * p.offset * half;
-        const py = y + ny * p.offset * half;
+        const px = p.x * w;
+        const py = p.y * h;
 
-        const edge = clamp(1 - Math.abs(p.offset), 0, 1);
-        const along = 1 - tt * 0.32;
+        // Soft falloff near extreme edges so the cloud feels nebular, not clipped.
+        const edgeFadeX = clamp(1 - Math.abs(p.x - 0.5) * 1.85, 0.35, 1);
+        const edgeFadeY = clamp(1 - Math.abs(p.y - 0.5) * 1.85, 0.35, 1);
+        const edge = edgeFadeX * edgeFadeY;
+
         const shimmer = animate
           ? 0.7 +
-            0.3 * Math.sin(timeSec * p.shimmer + p.phase) * (0.5 + 0.5 * edge)
+            0.3 * Math.sin(timeSec * p.shimmer + p.phase) * (0.55 + 0.45 * edge)
           : 0.88;
 
         let sparkleBoost = 1;
         if (animate && p.sparkle > 0) {
-          // Sharp occasional twinkle peaks — showy but not strobing.
           const pulse = Math.sin(timeSec * p.sparkle + p.sparklePhase);
           const peak = Math.pow(Math.max(0, pulse), 8);
           sparkleBoost = 1 + peak * 1.85;
         }
 
-        const a = p.alpha * edge * along * shimmer * sparkleBoost;
+        const a = p.alpha * edge * shimmer * sparkleBoost;
         if (a < 0.018) continue;
 
-        const colorT = clamp(tt * 0.9 + Math.abs(p.offset) * 0.14, 0, 1);
-        const [r, g, b] = colorAt(colorT);
+        const [r, g, b] = colorAt(p.colorT);
 
         const drawSize =
           p.size *

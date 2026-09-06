@@ -6,7 +6,7 @@ type IconProps = {
   strokeWidth?: number;
 };
 
-const strokeProps = (sw = 1.6) =>
+const strokeProps = (sw = 2) =>
   ({
     fill: "none",
     stroke: "currentColor",
@@ -15,64 +15,66 @@ const strokeProps = (sw = 1.6) =>
     strokeLinejoin: "round" as const,
   });
 
+/** Person / ID-card silhouette */
 export function AboutGlyph({ className, strokeWidth }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden {...strokeProps(strokeWidth)}>
-      <path d="M12 3.5 19.5 12 12 20.5 4.5 12 12 3.5Z" />
-      <circle cx="12" cy="12" r="2.25" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="8" r="3.25" />
+      <path d="M5.5 19.25c.7-3.4 3.1-5 6.5-5s5.8 1.6 6.5 5" />
     </svg>
   );
 }
 
+/** Folder / layered apps */
 export function ProjectsGlyph({ className, strokeWidth }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden {...strokeProps(strokeWidth)}>
-      <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" />
-      <rect x="13.5" y="3.5" width="7" height="7" rx="1.5" />
-      <rect x="3.5" y="13.5" width="7" height="7" rx="1.5" />
-      <rect x="13.5" y="13.5" width="7" height="7" rx="1.5" />
+      <path d="M3.75 8.5V7a2 2 0 0 1 2-2h4.1l1.6 1.75h6.8a2 2 0 0 1 2 2V9" />
+      <rect x="3.75" y="8.5" width="16.5" height="10.25" rx="2" />
     </svg>
   );
 }
 
+/** Notepad with lines */
 export function NotesGlyph({ className, strokeWidth }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden {...strokeProps(strokeWidth)}>
-      <path d="M14.5 4.5h-7A2.5 2.5 0 0 0 5 7v10a2.5 2.5 0 0 0 2.5 2.5h9A2.5 2.5 0 0 0 19 17V9.5L14.5 4.5Z" />
-      <path d="M14 4.5V9h4.5" />
-      <path d="M8.5 12.5h7M8.5 16h5" />
+      <rect x="5.5" y="3.5" width="13" height="17" rx="2" />
+      <path d="M8.5 8h7M8.5 12h7M8.5 16h4.5" />
     </svg>
   );
 }
 
+/** Clock */
 export function NowGlyph({ className, strokeWidth }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden {...strokeProps(strokeWidth)}>
       <circle cx="12" cy="12" r="8" />
-      <circle cx="12" cy="12" r="3.25" />
-      <path d="M12 4v2.25M12 17.75V20M4 12h2.25M17.75 12H20" />
+      <path d="M12 7.5V12l3.25 2.25" />
     </svg>
   );
 }
 
+/** Simple envelope */
 export function ContactGlyph({ className, strokeWidth }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden {...strokeProps(strokeWidth)}>
-      <rect x="3.5" y="5.5" width="17" height="13" rx="2.5" />
-      <path d="m5 8 7 5.5L19 8" />
+      <rect x="3.5" y="6" width="17" height="12" rx="2" />
+      <path d="m4.75 8.25 7.25 5.25 7.25-5.25" />
     </svg>
   );
 }
 
+/** Flat, high-contrast tile colors (readable on dark + light desks) */
 export const APP_ACCENTS: Record<
   AppId,
-  { tileFrom: string; tileTo: string; color: string }
+  { tile: string; color: string }
 > = {
-  about: { tileFrom: "#1a2744", tileTo: "#101826", color: "#6ea8ff" },
-  projects: { tileFrom: "#132c2a", tileTo: "#0e1a1c", color: "#5ec8bf" },
-  notes: { tileFrom: "#2a2414", tileTo: "#18140c", color: "#d4b44a" },
-  now: { tileFrom: "#261a30", tileTo: "#160e1c", color: "#b794f6" },
-  contact: { tileFrom: "#1a2838", tileTo: "#0e1620", color: "#7eb8ff" },
+  about: { tile: "#23406e", color: "#9ec2ff" },
+  projects: { tile: "#1b4a46", color: "#7ee0d6" },
+  notes: { tile: "#4a3c16", color: "#efc85a" },
+  now: { tile: "#3d2a52", color: "#cbb0ff" },
+  contact: { tile: "#1f3d5c", color: "#8fc2ff" },
 };
 
 const GLYPHS: Record<AppId, (p: IconProps) => ReactElement> = {
@@ -102,21 +104,17 @@ export function AppIcon({ id, size = "md", className = "" }: AppIconProps) {
 
   return (
     <span
-      className={`relative inline-flex shrink-0 items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_1px_2px_rgba(0,0,0,0.35)] ring-1 ring-white/[0.06] ${dims.box} ${className}`}
+      className={`relative inline-flex shrink-0 items-center justify-center ring-1 ${dims.box} ${className}`}
       style={{
-        background: `linear-gradient(160deg, ${accent.tileFrom} 0%, ${accent.tileTo} 100%)`,
+        background: accent.tile,
         color: accent.color,
+        boxShadow: "var(--desk-icon-inset)",
+        // ring color via style for theme adapt
+        ["--tw-ring-color" as string]: "var(--desk-icon-ring)",
       }}
       aria-hidden
     >
-      <span
-        className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-60"
-        style={{
-          background:
-            "radial-gradient(120% 80% at 30% 15%, rgba(255,255,255,0.12), transparent 55%)",
-        }}
-      />
-      <Glyph className={`relative ${dims.glyph}`} strokeWidth={1.65} />
+      <Glyph className={`relative ${dims.glyph}`} strokeWidth={2.15} />
     </span>
   );
 }

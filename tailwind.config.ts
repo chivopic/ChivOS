@@ -10,15 +10,19 @@ const config: Config = {
     extend: {
       colors: {
         desk: {
-          bg: "#0c0e12",
-          panel: "#141820",
-          raised: "#1a2030",
-          border: "#2a3344",
-          muted: "#8b95a8",
-          text: "#e8ecf4",
-          accent: "#6ea8ff",
-          accentDim: "#3d6bb3",
-          warm: "#c9a227",
+          bg: "var(--desk-bg)",
+          panel: "var(--desk-panel)",
+          raised: "var(--desk-raised)",
+          border: "var(--desk-border)",
+          muted: "var(--desk-muted)",
+          text: "var(--desk-text)",
+          accent: "var(--desk-accent)",
+          accentDim: "var(--desk-accent-dim)",
+          warm: "var(--desk-warm)",
+          hover: "var(--desk-hover)",
+          hoverStrong: "var(--desk-hover-strong)",
+          glassBorder: "var(--desk-glass-border)",
+          statusBorder: "var(--desk-status-border)",
         },
       },
       fontFamily: {
@@ -37,9 +41,8 @@ const config: Config = {
         ],
       },
       boxShadow: {
-        window:
-          "0 18px 48px rgba(0,0,0,0.55), 0 0 0 1px rgba(42,51,68,0.55)",
-        dock: "0 12px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06)",
+        window: "var(--desk-shadow-window)",
+        dock: "var(--desk-shadow-dock)",
       },
     },
   },

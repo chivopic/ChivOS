@@ -39,7 +39,7 @@ export function MobileAppList({ active, onOpen, onClose }: MobileAppListProps) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg px-2 py-1 text-sm text-desk-accent transition hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-desk-accent"
+            className="rounded-lg px-2 py-1 text-sm text-desk-accent transition hover:bg-desk-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-desk-accent"
           >
             ← Back
           </button>

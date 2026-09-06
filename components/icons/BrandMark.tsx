@@ -13,7 +13,7 @@ export function BrandMark({ className = "h-4 w-4" }: BrandMarkProps) {
     >
       <path
         d="M17.4 7.35a6.4 6.4 0 1 0 0 9.3"
-        stroke="var(--desk-accent)"
+        stroke="currentColor"
         strokeWidth="2.2"
         strokeLinecap="round"
       />

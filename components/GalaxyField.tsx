@@ -27,15 +27,10 @@ uniform float uStarSpeed;
 uniform float uDensity;
 uniform float uHueShift;
 uniform float uSpeed;
-uniform vec2 uMouse;
 uniform float uGlowIntensity;
 uniform float uSaturation;
-uniform float uMouseRepulsion;
 uniform float uTwinkleIntensity;
 uniform float uRotationSpeed;
-uniform float uRepulsionStrength;
-uniform float uMouseActiveFactor;
-uniform float uAutoCenterRepulsion;
 uniform float uTransparent;
 
 varying vec2 vUv;
@@ -130,23 +125,6 @@ void main() {
   vec2 focalPx = uFocal * uResolution.xy;
   vec2 uv = (vUv * uResolution.xy - focalPx) / uResolution.y;
 
-  vec2 mouseNorm = uMouse - vec2(0.5);
-
-  if (uAutoCenterRepulsion > 0.0) {
-    vec2 centerUV = vec2(0.0);
-    float centerDist = length(uv - centerUV);
-    vec2 repulsion = normalize(uv - centerUV) * (uAutoCenterRepulsion / (centerDist + 0.1));
-    uv += repulsion * 0.05;
-  } else if (uMouseRepulsion > 0.5) {
-    vec2 mousePosUV = (uMouse * uResolution.xy - focalPx) / uResolution.y;
-    float mouseDist = length(uv - mousePosUV);
-    vec2 repulsion = normalize(uv - mousePosUV) * (uRepulsionStrength / (mouseDist + 0.1));
-    uv += repulsion * 0.05 * uMouseActiveFactor;
-  } else {
-    vec2 mouseOffset = mouseNorm * 0.1 * uMouseActiveFactor;
-    uv += mouseOffset;
-  }
-
   float autoRotAngle = uTime * uRotationSpeed;
   mat2 autoRot = mat2(cos(autoRotAngle), -sin(autoRotAngle), sin(autoRotAngle), cos(autoRotAngle));
   uv = autoRot * uv;
@@ -209,11 +187,6 @@ export function GalaxyField() {
     let visible = document.visibilityState !== "hidden";
     let disposed = false;
 
-    const targetMouse = { x: 0.5, y: 0.5 };
-    const smoothMouse = { x: 0.5, y: 0.5 };
-    let targetMouseActive = 0;
-    let smoothMouseActive = 0;
-
     // Craft palette: cool/neutral with slight blue→magenta hueShift (not candy dust).
     const starSpeed = 0.45;
     const density = 1.15;
@@ -223,8 +196,6 @@ export function GalaxyField() {
     const saturation = 0.35;
     const twinkleIntensity = reducedMotion ? 0 : 0.35;
     const rotationSpeed = reducedMotion ? 0 : 0.06;
-    const mouseRepulsion = !reducedMotion;
-    const repulsionStrength = 1.6;
 
     function resize() {
       if (disposed) return;
@@ -260,15 +231,10 @@ export function GalaxyField() {
         uDensity: { value: density },
         uHueShift: { value: hueShift },
         uSpeed: { value: speed },
-        uMouse: { value: new Float32Array([0.5, 0.5]) },
         uGlowIntensity: { value: glowIntensity },
         uSaturation: { value: saturation },
-        uMouseRepulsion: { value: mouseRepulsion ? 1 : 0 },
         uTwinkleIntensity: { value: twinkleIntensity },
         uRotationSpeed: { value: rotationSpeed },
-        uRepulsionStrength: { value: repulsionStrength },
-        uMouseActiveFactor: { value: 0 },
-        uAutoCenterRepulsion: { value: 0 },
         uTransparent: { value: 0 },
       },
     });
@@ -287,51 +253,23 @@ export function GalaxyField() {
         program!.uniforms.uStarSpeed.value = (t * 0.001 * starSpeed) / 10.0;
       }
 
-      const lerp = 0.05;
-      smoothMouse.x += (targetMouse.x - smoothMouse.x) * lerp;
-      smoothMouse.y += (targetMouse.y - smoothMouse.y) * lerp;
-      smoothMouseActive += (targetMouseActive - smoothMouseActive) * lerp;
-
-      const mouseUniform = program!.uniforms.uMouse.value as Float32Array;
-      mouseUniform[0] = smoothMouse.x;
-      mouseUniform[1] = smoothMouse.y;
-      program!.uniforms.uMouseActiveFactor.value = smoothMouseActive;
-
       renderer.render({ scene: mesh });
     }
 
     // Seed one frame for reduced-motion static field, then keep looping (no-op time).
     animateId = requestAnimationFrame(update);
 
-    function onMouseMove(e: MouseEvent) {
-      if (reducedMotion) return;
-      const rect = ctn.getBoundingClientRect();
-      const w = rect.width || 1;
-      const h = rect.height || 1;
-      targetMouse.x = (e.clientX - rect.left) / w;
-      targetMouse.y = 1.0 - (e.clientY - rect.top) / h;
-      targetMouseActive = 1.0;
-    }
-
-    function onMouseLeave() {
-      targetMouseActive = 0.0;
-    }
-
     function onVisibility() {
       visible = document.visibilityState !== "hidden";
     }
 
     window.addEventListener("resize", resize, { passive: true });
-    window.addEventListener("mousemove", onMouseMove, { passive: true });
-    document.documentElement.addEventListener("mouseleave", onMouseLeave);
     document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
       disposed = true;
       cancelAnimationFrame(animateId);
       window.removeEventListener("resize", resize);
-      window.removeEventListener("mousemove", onMouseMove);
-      document.documentElement.removeEventListener("mouseleave", onMouseLeave);
       document.removeEventListener("visibilitychange", onVisibility);
       if (canvas.parentNode === ctn) ctn.removeChild(canvas);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
